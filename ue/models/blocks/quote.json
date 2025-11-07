@@ -5,9 +5,7 @@
       "id": "quote",
       "plugins": {
         "da": {
-          "name": "quote",
-          "rows": 1,
-          "columns": 1
+          "unsafeHTML": "<div class=\"quote\"><div><div><p>Quotation</p></div></div><div><div><p>Author</p></div></div></div>"
         }
       }
     }
@@ -17,9 +15,9 @@
       "id": "quote",
       "fields": [
         {
-          "component": "richtext",
+          "component": "text",
           "valueType": "string",
-          "name": "div:nth-child(1)>div:nth-child(1)",
+          "name": "div:nth-child(1)>div:nth-child(1)>p:nth-child(1)",
           "label": "Quote",
           "required": true
         },
