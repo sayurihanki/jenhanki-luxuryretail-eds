@@ -2,6 +2,7 @@ mountpoints:
   /:
     url: https://content.da.live/kmanns/luxuryretail-eds
     type: markup
+    ue: true
 
 folders:
   /products/: /products/default
