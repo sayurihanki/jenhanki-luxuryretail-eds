@@ -1,37 +1,37 @@
 {
   "public": {
     "default": {
-      "commerce-core-endpoint": "https://na1-sandbox.api.commerce.adobe.com/6WXTJKdnmj6fQs3hmhv1wA/graphql",
-      "commerce-endpoint": "https://na1-sandbox.api.commerce.adobe.com/6WXTJKdnmj6fQs3hmhv1wA/graphql",
+      "commerce-core-endpoint": "https://na1-sandbox.api.commerce.adobe.com/CWC1Z3dRYVnZ5UEFozgrDk/graphql",
+      "commerce-endpoint": "https://na1-sandbox.api.commerce.adobe.com/CWC1Z3dRYVnZ5UEFozgrDk/graphql",
       "headers": {
         "all": {
           "Store": "default"
         },
         "cs": {
-          "AC-View-ID": "YOUR_HEADER_VALUE",
-          "AC-Price-Book-ID": "YOUR_HEADER_VALUE",
-          "AC-Source-Locale": "YOUR_HEADER_VALUE"
+          "Magento-Store-Code": "main_website_store",
+          "Magento-Store-View-Code": "default",
+          "Magento-Website-Code": "base"
         }
       },
       "commerce-assets-enabled": false,
       "analytics": {
         "base-currency-code": "USD",
         "environment": "Testing",
-        "environment-id": "6WXTJKdnmj6fQs3hmhv1wA",
-        "store-code": "YOUR_STORE_CODE",
-        "store-id": "YOUR_STORE_ID",
-        "store-name": "YOUR_STORE_NAME",
-        "store-url": "YOUR_STORE_URL",
-        "store-view-code": "YOUR_STORE_VIEW_CODE",
-        "store-view-id": "YOUR_STORE_VIEW_ID",
-        "store-view-name": "YOUR_STORE_VIEW_NAME",
-        "website-code": "YOUR_WEBSITE_CODE",
-        "website-id": "YOUR_WEBSITE_ID",
-        "website-name": "YOUR_WEBSITE_NAME"
+        "environment-id": "CWC1Z3dRYVnZ5UEFozgrDk",
+        "store-code": "main_website_store",
+        "store-id": "main_website_store",
+        "store-name": "Default Store View",
+        "store-url": "https://coresaas-subgraph-external:8000/CWC1Z3dRYVnZ5UEFozgrDk/",
+        "store-view-code": "default",
+        "store-view-id": "default",
+        "store-view-name": "Default Store View",
+        "website-code": "base",
+        "website-id": "base",
+        "website-name": "Main Website"
       },
       "plugins": {
         "picker": {
-          "rootCategory": "YOUR_ROOT_CATEGORY_ID"
+          "rootCategory": "36"
         }
       }
     }
