@@ -5,12 +5,7 @@
       "commerce-endpoint": "https://na1-sandbox.api.commerce.adobe.com/CWC1Z3dRYVnZ5UEFozgrDk/graphql",
       "headers": {
         "all": {
-          "Store": "default"
-        },
-        "cs": {
-          "Magento-Store-Code": "luxretail",
-          "Magento-Store-View-Code": "luxretaileng",
-          "Magento-Website-Code": "base"
+          "Store": "luxretaileng"
         }
       },
       "commerce-assets-enabled": false,
@@ -18,13 +13,13 @@
         "base-currency-code": "USD",
         "environment": "Testing",
         "environment-id": "CWC1Z3dRYVnZ5UEFozgrDk",
-        "store-code": "main_website_store",
-        "store-id": "main_website_store",
-        "store-name": "Default Store View",
-        "store-url": "https://coresaas-subgraph-external:8000/CWC1Z3dRYVnZ5UEFozgrDk/",
-        "store-view-code": "default",
-        "store-view-id": "default",
-        "store-view-name": "Default Store View",
+        "store-code": "luxretail",
+        "store-id": "luxretail",
+        "store-name": "Luxury Retail Store",
+        "store-url": "https://na1-sandbox.api.commerce.adobe.com/CWC1Z3dRYVnZ5UEFozgrDk/",
+        "store-view-code": "luxretaileng",
+        "store-view-id": "luxretaileng",
+        "store-view-name": "Luxury Retail English",
         "website-code": "base",
         "website-id": "base",
         "website-name": "Main Website"
