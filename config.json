@@ -6,6 +6,12 @@
       "headers": {
         "all": {
           "Store": "luxretaileng"
+        },
+        "cs": {
+          "Magento-Store-Code": "luxretail",
+          "Magento-Store-View-Code": "luxretaileng",
+          "Magento-Website-Code": "base",
+          "Magento-Environment-Id": "CWC1Z3dRYVnZ5UEFozgrDk"
         }
       },
       "commerce-assets-enabled": false,
