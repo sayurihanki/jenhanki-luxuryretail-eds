@@ -3,20 +3,9 @@
 
 /**
  * Age Gate overlay that fully replaces the block’s authored content.
- * Supports both:
- *  - data-* attributes on the block (UE/Crosswalk), and
- *  - label/value rows authored in documents (da.live).
- *
- * Label/value keys (case-insensitive):
- *  - data-min-age
- *  - data-storage-duration
- *  - data-title
- *  - data-message
- *  - data-month-placeholder
- *  - data-day-placeholder
- *  - data-year-placeholder
- *  - data-button-text
- *  - data-error-message
+ * Works with da.live label/value rows like:
+ *   <div><div><p>data-min-age</p></div><div><p>18</p></div></div>
+ * Also supports data-* attributes if you use UE later.
  */
 
 const DECISION_KEY = 'age_gate_decision';
@@ -50,7 +39,7 @@ function getCookie(name) {
   return null;
 }
 
-/* Trap focus inside the dialog for accessibility */
+/* trap focus inside the dialog */
 function trapFocus(container, focusables) {
   const first = focusables[0];
   const last = focusables[focusables.length - 1];
@@ -70,32 +59,24 @@ function trapFocus(container, focusables) {
   });
 }
 
-/**
- * Normalize rows for da.live:
- * <div class="block age-gate">
- *   <div>                <-- wrapper
- *     <div><div>key</div><div>value</div></div>   <-- row
- *     ...
- *   </div>
- * </div>
- */
+/* ---------- config readers ---------- */
+
+/** Returns the row <div> elements directly under the block
+ *  (your DOM: multiple rows, not a single wrapper). */
 function getRows(block) {
-  const directChildren = [...block.children];
-  // If the block has a single wrapper, rows are its children
-  if (directChildren.length === 1 && directChildren[0].children?.length) {
-    return [...directChildren[0].children];
-  }
-  // Else, assume rows are direct children
-  return directChildren;
+  // direct children that are <div> rows
+  return Array.from(block.querySelectorAll(':scope > div'));
 }
 
-/**
- * Read config from:
- * 1) block.dataset (if present)
- * 2) label/value rows inside the block (da.live)
- */
+/** Reads text content from a cell that may wrap content in <p> tags. */
+function cellText(cell) {
+  // Prefer the first <p>, fallback to whole cell text
+  const p = cell.querySelector('p');
+  return (p ? p.textContent : cell.textContent || '').trim();
+}
+
+/** Reads config from dataset and/or label/value rows. */
 function readConfig(block) {
-  // Dataset-first (covers UE/Crosswalk use cases)
   const cfg = {
     minAge: block.dataset.minAge,
     storageDuration: block.dataset.storageDuration,
@@ -108,14 +89,13 @@ function readConfig(block) {
     errorMessage: block.dataset.errorMessage,
   };
 
-  // Fallback to label/value rows for da.live
+  // Parse label/value rows (as in your snippet)
   const rows = getRows(block);
   rows.forEach((row) => {
-    const cells = [...row.children];
-    // Expect <div>key</div><div>value</div>
+    const cells = Array.from(row.children);
     if (cells.length >= 2) {
-      const key = cells[0].textContent?.trim().toLowerCase();
-      const val = cells[1].textContent?.trim();
+      const key = cellText(cells[0]).toLowerCase();
+      const val = cellText(cells[1]);
       switch (key) {
         case 'data-min-age': cfg.minAge ??= val; break;
         case 'data-storage-duration': cfg.storageDuration ??= val; break;
@@ -131,7 +111,6 @@ function readConfig(block) {
     }
   });
 
-  // Defaults
   const minAge = parseInt(cfg.minAge || '18', 10);
   return {
     minAge,
@@ -157,7 +136,7 @@ export default async function decorate(block) {
     return;
   }
 
-  // Read config from dataset or rows
+  // Read config from dataset or rows (matches your DOM)
   const {
     minAge,
     storageDuration,
@@ -170,10 +149,10 @@ export default async function decorate(block) {
     errorMessage,
   } = readConfig(block);
 
-  // Fully remove authored content so nothing is visible underneath
+  // Fully remove authored content to ensure nothing is visible underneath
   block.innerHTML = '';
 
-  // Build overlay UI
+  // Build overlay UI attached to BODY (so we don't depend on block visibility)
   const overlay = document.createElement('div');
   overlay.className = 'age-gate-overlay';
   overlay.setAttribute('role', 'dialog');
@@ -193,15 +172,12 @@ export default async function decorate(block) {
     <button class="age-gate-button" type="button">${buttonText}</button>
     <p class="age-gate-error" style="display: none;"></p>
   `;
-
   overlay.appendChild(modal);
-  block.appendChild(overlay);
 
-  // IMPORTANT: explicitly make the block visible (override CSS "display:none")
-  block.classList.add('age-gate--active');
-  block.style.display = 'block'; // extra safety across environments
+  // Append to BODY (not inside the block)
+  document.body.appendChild(overlay);
 
-  // Lock body scroll while overlay is open
+  // Lock page scroll while overlay is open
   const previousOverflow = document.body.style.overflow;
   document.body.style.overflow = 'hidden';
 
@@ -216,7 +192,7 @@ export default async function decorate(block) {
   trapFocus(overlay, focusables);
   setTimeout(() => monthInput.focus(), 0);
 
-  // Keep overlay until a valid decision; ESC does not close
+  // Keep overlay until decision; ESC does not close
   overlay.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') e.preventDefault();
   });
@@ -247,7 +223,7 @@ export default async function decorate(block) {
     ) {
       const dob = new Date(year, month - 1, day);
 
-      // Guard invalid calendar dates (e.g., 31 Feb)
+      // Guard invalid dates (e.g., 31 Feb)
       if (dob.getMonth() !== (month - 1) || dob.getDate() !== day || dob.getFullYear() !== year) {
         showError('Please enter a valid date.');
         return;
@@ -258,14 +234,16 @@ export default async function decorate(block) {
         localStorage.setItem(DECISION_KEY, 'true');
         setCookie(DECISION_KEY, 'true', storageDuration);
 
-        // Remove entire block and restore scroll
+        // Remove block and overlay, restore scroll
         block.remove();
+        overlay.remove();
         document.body.style.overflow = previousOverflow || '';
       } else {
         showError(errorMessage);
       }
-      } else {
-        showError('Please enter a valid date.');
-      }
-    });
-  }
+    } else {
+      showError('Please enter a valid date.');
+    }
+  });
+}
+``

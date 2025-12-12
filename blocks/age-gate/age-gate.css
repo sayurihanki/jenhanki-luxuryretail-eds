@@ -1,17 +1,12 @@
 
 /* age-gate.css */
 
-/* Hide the block until JS activates it to prevent any flash of authored text. */
+/* Safety: hide the block until JS runs (prevents authored text flash). */
 .age-gate {
   display: none;
 }
 
-/* When JS is ready, this class makes the block visible. */
-.age-gate.age-gate--active {
-  display: block;
-}
-
-/* Full-screen overlay above all content. */
+/* Overlay fills the entire viewport and sits above everything. */
 .age-gate-overlay {
   position: fixed;
   inset: 0; /* top/left/right/bottom: 0 */
@@ -19,7 +14,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10000; /* outrank any site UI */
+  z-index: 10000; /* outrank site UI */
 }
 
 /* Modal panel */
@@ -45,7 +40,7 @@
   color: #666;
 }
 
-/* DOB row */
+/* DOB inputs row */
 .age-gate-form {
   display: flex;
   justify-content: center;
@@ -62,12 +57,12 @@
   font-size: 16px;
 }
 
-/* Action button */
+/* Primary action */
 .age-gate-button {
   background-color: #007bff;
   color: #fff;
   padding: 12px 20px;
-   border: none;
+  border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
@@ -78,9 +73,9 @@
   background-color: #0056b3;
 }
 
-/* Error message */
+/* Error text */
 .age-gate-error {
   color: #d9534f;
-  margin-top: 10px;
+   margin-top: 10px;
   font-size: 14px;
 }
