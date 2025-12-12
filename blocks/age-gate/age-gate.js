@@ -2,19 +2,26 @@
 // age-gate.js
 
 /**
- * Age Gate overlay that fully replaces the block content.
- * If already verified, the block is removed immediately.
+ * Age Gate overlay that fully replaces the block’s authored content.
+ * Supports both:
+ *  - data-* attributes on the block (UE/Crosswalk style), and
+ *  - label/value rows authored in documents (da.live style).
  *
- * Supported data attributes on the block:
- * - data-min-age (default 18)
- * - data-storage-duration (cookie days, default 30)
- * - data-title, data-message
- * - data-month-placeholder, data-day-placeholder, data-year-placeholder
- * - data-button-text
- * - data-error-message
+ * Label/value keys supported (case-insensitive):
+ *  - data-min-age
+ *  - data-storage-duration
+ *  - data-title
+ *  - data-message
+ *  - data-month-placeholder
+ *  - data-day-placeholder
+ *  - data-year-placeholder
+ *  - data-button-text
+ *  - data-error-message
  */
 
 const DECISION_KEY = 'age_gate_decision';
+
+/* ---------- utilities ---------- */
 
 function calculateAge(dob) {
   const diff = Date.now() - dob.getTime();
@@ -43,50 +50,135 @@ function getCookie(name) {
   return null;
 }
 
-/* Simple focus trap for accessibility */
+/* trap focus to dialog */
 function trapFocus(container, focusables) {
   const first = focusables[0];
   const last = focusables[focusables.length - 1];
 
   container.addEventListener('keydown', (e) => {
     if (e.key !== 'Tab') return;
-    const current = document.activeElement;
     const back = e.shiftKey;
+    const active = document.activeElement;
 
-    if (back && current === first) {
+    if (back && active === first) {
       e.preventDefault();
       last.focus();
-    } else if (!back && current === last) {
+    } else if (!back && active === last) {
       e.preventDefault();
       first.focus();
     }
   });
 }
 
-export default async function decorate(block) {
-  const minAge = parseInt(block.dataset.minAge || '18', 10);
-  const storageDuration = parseInt(block.dataset.storageDuration || '30', 10);
+/**
+ * Read config from:
+ * 1) block.dataset (if present)
+ * 2) label/value rows inside the block (da.live)
+ */
+function readConfig(block) {
+  // Start with dataset values
+  const cfg = {
+    minAge: block.dataset.minAge,
+    storageDuration: block.dataset.storageDuration,
+    title: block.dataset.title,
+    message: block.dataset.message,
+    monthPlaceholder: block.dataset.monthPlaceholder,
+    dayPlaceholder: block.dataset.dayPlaceholder,
+    yearPlaceholder: block.dataset.yearPlaceholder,
+    buttonText: block.dataset.buttonText,
+    errorMessage: block.dataset.errorMessage,
+  };
 
+  // If some are missing, try to parse label/value rows:
+  // EDS blocks often render each row as a direct child <div> with one or more <div>s inside.
+  const rows = [...block.children];
+
+  if (rows.length > 0) {
+    // We expect a pattern like:
+    // <div><div>data-min-age</div><div>18</div></div>
+    rows.forEach((row) => {
+      const cells = [...row.children];
+      if (cells.length >= 2) {
+        const key = cells[0].textContent?.trim().toLowerCase();
+        const val = cells[1].textContent?.trim();
+
+        switch (key) {
+          case 'data-min-age':
+            if (!cfg.minAge) cfg.minAge = val;
+            break;
+          case 'data-storage-duration':
+            if (!cfg.storageDuration) cfg.storageDuration = val;
+            break;
+          case 'data-title':
+            if (!cfg.title) cfg.title = val;
+            break;
+          case 'data-message':
+            if (!cfg.message) cfg.message = val;
+            break;
+          case 'data-month-placeholder':
+            if (!cfg.monthPlaceholder) cfg.monthPlaceholder = val;
+            break;
+          case 'data-day-placeholder':
+            if (!cfg.dayPlaceholder) cfg.dayPlaceholder = val;
+            break;
+          case 'data-year-placeholder':
+            if (!cfg.yearPlaceholder) cfg.yearPlaceholder = val;
+            break;
+          case 'data-button-text':
+            if (!cfg.buttonText) cfg.buttonText = val;
+            break;
+          case 'data-error-message':
+            if (!cfg.errorMessage) cfg.errorMessage = val;
+            break;
+          default:
+            break;
+        }
+      }
+    });
+  }
+
+  // Defaults
+  return {
+    minAge: parseInt(cfg.minAge || '18', 10),
+    storageDuration: parseInt(cfg.storageDuration || '30', 10),
+    title: cfg.title || 'Age Verification',
+    message: cfg.message || 'Please enter your date of birth to continue.',
+    monthPlaceholder: cfg.monthPlaceholder || 'MM',
+    dayPlaceholder: cfg.dayPlaceholder || 'DD',
+    yearPlaceholder: cfg.yearPlaceholder || 'YYYY',
+    buttonText: cfg.buttonText || 'Submit',
+    errorMessage: cfg.errorMessage || `You must be at least ${parseInt(cfg.minAge || '18', 10)} years old to view this content.`,
+  };
+}
+
+/* ---------- main ---------- */
+
+export default async function decorate(block) {
   const decision = localStorage.getItem(DECISION_KEY) || getCookie(DECISION_KEY);
 
-  // If already verified, remove the block immediately (overlay never renders)
+  // If already verified, remove block (no overlay)
   if (decision === 'true') {
     block.remove();
     return;
   }
 
+  // Read config from dataset or rows
+  const {
+    minAge,
+    storageDuration,
+    title,
+    message,
+    monthPlaceholder,
+    dayPlaceholder,
+    yearPlaceholder,
+    buttonText,
+    errorMessage,
+  } = readConfig(block);
+
   // Fully remove authored content to ensure nothing is visible underneath
   block.innerHTML = '';
 
   // Build overlay UI
-  const title = block.dataset.title || 'Age Verification';
-  const message = block.dataset.message || 'Please enter your date of birth to continue.';
-  const monthPlaceholder = block.dataset.monthPlaceholder || 'MM';
-  const dayPlaceholder = block.dataset.dayPlaceholder || 'DD';
-  const yearPlaceholder = block.dataset.yearPlaceholder || 'YYYY';
-  const buttonText = block.dataset.buttonText || 'Submit';
-  const errorMessage = block.dataset.errorMessage || `You must be at least ${minAge} years old to view this content.`;
-
   const overlay = document.createElement('div');
   overlay.className = 'age-gate-overlay';
   overlay.setAttribute('role', 'dialog');
@@ -109,7 +201,7 @@ export default async function decorate(block) {
 
   overlay.appendChild(modal);
   block.appendChild(overlay);
-  block.style.display = ''; // reveal block so overlay is visible
+  block.style.display = ''; // reveal overlay
 
   // Lock body scroll while overlay is open
   const previousOverflow = document.body.style.overflow;
@@ -126,7 +218,7 @@ export default async function decorate(block) {
   trapFocus(overlay, focusables);
   setTimeout(() => monthInput.focus(), 0);
 
-  // Keep overlay up until a valid decision; ESC does not close
+  // Keep overlay until a valid decision; ESC does not close
   overlay.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') e.preventDefault();
   });
@@ -157,25 +249,26 @@ export default async function decorate(block) {
     ) {
       const dob = new Date(year, month - 1, day);
 
-      // Guard against invalid calendar dates (e.g., 31 Feb)
+      // Guard invalid calendar dates (e.g., 31 Feb)
       if (dob.getMonth() !== (month - 1) || dob.getDate() !== day || dob.getFullYear() !== year) {
         showError('Please enter a valid date.');
         return;
       }
 
-        if (calculateAge(dob) >= minAge) {
-          // Persist decision in both storage mechanisms
-          localStorage.setItem(DECISION_KEY, 'true');
-          setCookie(DECISION_KEY, 'true', storageDuration);
-  
-          // Remove entire block and restore scroll
-          block.remove();
-          document.body.style.overflow = previousOverflow || '';
-        } else {
-          showError(errorMessage);
-        }
+      if (calculateAge(dob) >= minAge) {
+        // Persist decision (localStorage + cookie)
+        localStorage.setItem(DECISION_KEY, 'true');
+        setCookie(DECISION_KEY, 'true', storageDuration);
+
+        // Remove entire block and restore scroll
+        block.remove();
+        document.body.style.overflow = previousOverflow || '';
       } else {
-        showError('Please enter a valid date.');
+        showError(errorMessage);
       }
-    });
-  }
+    } else {
+      showError('Please enter a valid date.');
+    }
+  });
+}
+``

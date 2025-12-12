@@ -1,8 +1,7 @@
 
 /* age-gate.css */
 
-/* Safety: prevent any authored text from flashing before JS runs.
-   JS will either remove the block (if verified) or render the overlay. */
+/* Safety: prevent authored text from flashing before JS runs. */
 .age-gate {
   display: none;
 }
@@ -18,7 +17,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10000; /* keep this high to outrank any site UI */
+  z-index: 10000; /* outrank other UI */
 }
 
 /* Modal panel */
@@ -78,7 +77,7 @@
 }
 
 /* Error message */
-.age.age-gate-error {
+.age-gate-error {
   color: #d9534f;
   margin-top: 10px;
   font-size: 14px;
