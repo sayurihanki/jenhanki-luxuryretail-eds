@@ -1,28 +1,27 @@
 
 /* age-gate.css */
 
-/* Safety rule: hide the block content before JS runs to prevent any flash.
-   JS will either remove the block (if verified) or show the overlay. */
+/* Safety: prevent any authored text from flashing before JS runs.
+   JS will either remove the block (if verified) or render the overlay. */
 .age-gate {
   display: none;
 }
 
-/* Overlay fills viewport and sits above all content */
+/* Full-screen overlay above all content */
 .age-gate-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  /* keep your original color and z-index */
   background-color: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10000; /* slightly higher than 1000 to outrank other UI */
+  z-index: 10000; /* keep this high to outrank any site UI */
 }
 
-/* Modal panel styling (your original styles preserved/enhanced) */
+/* Modal panel */
 .age-gate-modal {
   background-color: #fff;
   padding: 40px;
@@ -45,7 +44,7 @@
   color: #666;
 }
 
-/* DOB inputs row */
+/* DOB row */
 .age-gate-form {
   display: flex;
   justify-content: center;
@@ -62,7 +61,7 @@
   font-size: 16px;
 }
 
-/* Primary action */
+/* Action button */
 .age-gate-button {
   background-color: #007bff;
   color: #fff;
@@ -78,23 +77,9 @@
   background-color: #0056b3;
 }
 
-/* Error text */
-.age-gate-error {
+/* Error message */
+.age.age-gate-error {
   color: #d9534f;
   margin-top: 10px;
   font-size: 14px;
-}
-
-/* (Optional) visually hidden helper if you decide to keep authored text for SEO
-   but you do not want it visible to users. Not used by default. */
-.age-gate-visually-hidden {
-  position: absolute !important;
-  clip: rect(0 0 0 0) !important;
-  clip-path: inset(50%) !important;
-  width: 1px !important;
-  height: 1px !important;
-  overflow: hidden !important;
-  border: 0 !important;
-  padding: 0 !important;
-  margin: -1px !important;
 }

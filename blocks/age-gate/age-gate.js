@@ -2,12 +2,12 @@
 // age-gate.js
 
 /**
- * Ensures the Age Gate renders ONLY as an overlay and underlying block content
- * is never visible. If verified, the block is removed immediately.
+ * Age Gate overlay that fully replaces the block content.
+ * If already verified, the block is removed immediately.
  *
- * Data attributes supported on the block:
+ * Supported data attributes on the block:
  * - data-min-age (default 18)
- * - data-storage-duration (days for cookie, default 30)
+ * - data-storage-duration (cookie days, default 30)
  * - data-title, data-message
  * - data-month-placeholder, data-day-placeholder, data-year-placeholder
  * - data-button-text
@@ -43,7 +43,7 @@ function getCookie(name) {
   return null;
 }
 
-/* Focus trap for accessibility */
+/* Simple focus trap for accessibility */
 function trapFocus(container, focusables) {
   const first = focusables[0];
   const last = focusables[focusables.length - 1];
@@ -51,12 +51,12 @@ function trapFocus(container, focusables) {
   container.addEventListener('keydown', (e) => {
     if (e.key !== 'Tab') return;
     const current = document.activeElement;
-    const goingBack = e.shiftKey;
+    const back = e.shiftKey;
 
-    if (goingBack && current === first) {
+    if (back && current === first) {
       e.preventDefault();
       last.focus();
-    } else if (!goingBack && current === last) {
+    } else if (!back && current === last) {
       e.preventDefault();
       first.focus();
     }
@@ -64,24 +64,21 @@ function trapFocus(container, focusables) {
 }
 
 export default async function decorate(block) {
-  // Read config from data attributes with sensible defaults
   const minAge = parseInt(block.dataset.minAge || '18', 10);
   const storageDuration = parseInt(block.dataset.storageDuration || '30', 10);
 
   const decision = localStorage.getItem(DECISION_KEY) || getCookie(DECISION_KEY);
 
-  // 1) If already verified, remove the block immediately (overlay never shows)
+  // If already verified, remove the block immediately (overlay never renders)
   if (decision === 'true') {
     block.remove();
     return;
   }
 
-  // 2) Prevent any authored content from appearing
-  //    If you want to keep authored text for SEO, you can move it into a
-  //    visually-hidden wrapper before clearing; here we fully clear for safety.
+  // Fully remove authored content to ensure nothing is visible underneath
   block.innerHTML = '';
 
-  // 3) Build overlay UI
+  // Build overlay UI
   const title = block.dataset.title || 'Age Verification';
   const message = block.dataset.message || 'Please enter your date of birth to continue.';
   const monthPlaceholder = block.dataset.monthPlaceholder || 'MM';
@@ -111,15 +108,14 @@ export default async function decorate(block) {
   `;
 
   overlay.appendChild(modal);
-  // Append overlay inside the block (EDS convention), then reveal the block.
   block.appendChild(overlay);
-  block.style.display = ''; // show the overlay
+  block.style.display = ''; // reveal block so overlay is visible
 
-  // Disable page scroll while modal is open
+  // Lock body scroll while overlay is open
   const previousOverflow = document.body.style.overflow;
   document.body.style.overflow = 'hidden';
 
-  // 4) Wire events & accessibility
+  // Accessibility wiring
   const monthInput = modal.querySelector('#age-gate-month');
   const dayInput = modal.querySelector('#age-gate-day');
   const yearInput = modal.querySelector('#age-gate-year');
@@ -128,15 +124,11 @@ export default async function decorate(block) {
 
   const focusables = [monthInput, dayInput, yearInput, submitButton];
   trapFocus(overlay, focusables);
-  // initial focus
   setTimeout(() => monthInput.focus(), 0);
 
-  // Close prevention: keep overlay until a valid decision is made
+  // Keep overlay up until a valid decision; ESC does not close
   overlay.addEventListener('keydown', (e) => {
-    // Prevent ESC from closing; you may allow it if you want a soft exit
-    if (e.key === 'Escape') {
-      e.preventDefault();
-    }
+    if (e.key === 'Escape') e.preventDefault();
   });
 
   function showError(text) {
@@ -165,23 +157,23 @@ export default async function decorate(block) {
     ) {
       const dob = new Date(year, month - 1, day);
 
-      // Guard against invalid dates like 31 Feb
-      if (dob.getMonth() !== month - 1 || dob.getDate() !== day || dob.getFullYear() !== year) {
+      // Guard against invalid calendar dates (e.g., 31 Feb)
+      if (dob.getMonth() !== (month - 1) || dob.getDate() !== day || dob.getFullYear() !== year) {
         showError('Please enter a valid date.');
         return;
       }
 
-      if (calculateAge(dob) >= minAge) {
-        // Persist decision in both storage mechanisms for robustness
-        localStorage.setItem(DECISION_KEY, 'true');
-        setCookie(DECISION_KEY, 'true', storageDuration);
-
-        // Remove block (overlay + any hidden content) and restore scroll
-        block.remove();
-        document.body.style.overflow = previousOverflow || '';
-      } else {
-        showError(errorMessage);
-      }
+        if (calculateAge(dob) >= minAge) {
+          // Persist decision in both storage mechanisms
+          localStorage.setItem(DECISION_KEY, 'true');
+          setCookie(DECISION_KEY, 'true', storageDuration);
+  
+          // Remove entire block and restore scroll
+          block.remove();
+          document.body.style.overflow = previousOverflow || '';
+        } else {
+          showError(errorMessage);
+        }
       } else {
         showError('Please enter a valid date.');
       }
