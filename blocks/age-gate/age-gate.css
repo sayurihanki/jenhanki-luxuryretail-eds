@@ -1,0 +1,73 @@
+/* age-gate.css */
+
+.age-gate-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.age-gate-modal {
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+}
+
+.age-gate-modal h2 {
+  margin-top: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.age-gate-modal p {
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.age-gate-form {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.age-gate-form input {
+  width: 80px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.age-gate-button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.age-gate-button:hover {
+  background-color: #0056b3;
+}
+
+.age-gate-error {
+  color: #d9534f;
+  margin-top: 10px;
+  font-size: 14px;
+}
