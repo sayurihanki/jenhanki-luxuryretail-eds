@@ -1,25 +1,25 @@
 
 /* age-gate.css */
 
-/* Hide the block until JS activates it to prevent any flash of authored text */
+/* Hide the block until JS activates it to prevent any flash of authored text. */
 .age-gate {
   display: none;
 }
 
-/* When JS is ready, this class makes the block visible */
+/* When JS is ready, this class makes the block visible. */
 .age-gate.age-gate--active {
   display: block;
 }
 
-/* Full-screen overlay above all content */
+/* Full-screen overlay above all content. */
 .age-gate-overlay {
   position: fixed;
-  inset: 0; /* shorthand for top/left/right/bottom: 0 */
+  inset: 0; /* top/left/right/bottom: 0 */
   background-color: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10000; /* high to outrank any site UI */
+  z-index: 10000; /* outrank any site UI */
 }
 
 /* Modal panel */
@@ -67,7 +67,7 @@
   background-color: #007bff;
   color: #fff;
   padding: 12px 20px;
-  border: none;
+   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
@@ -80,7 +80,7 @@
 
 /* Error message */
 .age-gate-error {
-   color: #d9534f;
+  color: #d9534f;
   margin-top: 10px;
   font-size: 14px;
 }

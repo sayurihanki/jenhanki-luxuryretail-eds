@@ -71,12 +71,31 @@ function trapFocus(container, focusables) {
 }
 
 /**
+ * Normalize rows for da.live:
+ * <div class="block age-gate">
+ *   <div>                <-- wrapper
+ *     <div><div>key</div><div>value</div></div>   <-- row
+ *     ...
+ *   </div>
+ * </div>
+ */
+function getRows(block) {
+  const directChildren = [...block.children];
+  // If the block has a single wrapper, rows are its children
+  if (directChildren.length === 1 && directChildren[0].children?.length) {
+    return [...directChildren[0].children];
+  }
+  // Else, assume rows are direct children
+  return directChildren;
+}
+
+/**
  * Read config from:
  * 1) block.dataset (if present)
  * 2) label/value rows inside the block (da.live)
  */
 function readConfig(block) {
-  // Start with dataset values
+  // Dataset-first (covers UE/Crosswalk use cases)
   const cfg = {
     minAge: block.dataset.minAge,
     storageDuration: block.dataset.storageDuration,
@@ -89,30 +108,28 @@ function readConfig(block) {
     errorMessage: block.dataset.errorMessage,
   };
 
-  // If some are missing, parse label/value rows:
-  const rows = [...block.children];
-  if (rows.length > 0) {
-    rows.forEach((row) => {
-      const cells = [...row.children];
-      if (cells.length >= 2) {
-        const key = cells[0].textContent?.trim().toLowerCase();
-        const val = cells[1].textContent?.trim();
-
-        switch (key) {
-          case 'data-min-age': cfg.minAge ??= val; break;
-          case 'data-storage-duration': cfg.storageDuration ??= val; break;
-          case 'data-title': cfg.title ??= val; break;
-          case 'data-message': cfg.message ??= val; break;
-          case 'data-month-placeholder': cfg.monthPlaceholder ??= val; break;
-          case 'data-day-placeholder': cfg.dayPlaceholder ??= val; break;
-          case 'data-year-placeholder': cfg.yearPlaceholder ??= val; break;
-          case 'data-button-text': cfg.buttonText ??= val; break;
-          case 'data-error-message': cfg.errorMessage ??= val; break;
-          default: break;
-        }
+  // Fallback to label/value rows for da.live
+  const rows = getRows(block);
+  rows.forEach((row) => {
+    const cells = [...row.children];
+    // Expect <div>key</div><div>value</div>
+    if (cells.length >= 2) {
+      const key = cells[0].textContent?.trim().toLowerCase();
+      const val = cells[1].textContent?.trim();
+      switch (key) {
+        case 'data-min-age': cfg.minAge ??= val; break;
+        case 'data-storage-duration': cfg.storageDuration ??= val; break;
+        case 'data-title': cfg.title ??= val; break;
+        case 'data-message': cfg.message ??= val; break;
+        case 'data-month-placeholder': cfg.monthPlaceholder ??= val; break;
+        case 'data-day-placeholder': cfg.dayPlaceholder ??= val; break;
+        case 'data-year-placeholder': cfg.yearPlaceholder ??= val; break;
+        case 'data-button-text': cfg.buttonText ??= val; break;
+        case 'data-error-message': cfg.errorMessage ??= val; break;
+        default: break;
       }
-    });
-  }
+    }
+  });
 
   // Defaults
   const minAge = parseInt(cfg.minAge || '18', 10);
@@ -153,7 +170,7 @@ export default async function decorate(block) {
     errorMessage,
   } = readConfig(block);
 
-  // Fully remove authored content to ensure nothing is visible underneath
+  // Fully remove authored content so nothing is visible underneath
   block.innerHTML = '';
 
   // Build overlay UI
@@ -250,5 +267,5 @@ export default async function decorate(block) {
       } else {
         showError('Please enter a valid date.');
       }
-     });
+    });
   }
