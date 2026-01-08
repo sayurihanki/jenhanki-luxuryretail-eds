@@ -102,15 +102,15 @@
     .gameboy-casing {
       background: linear-gradient(135deg, #e8e8e8 0%, #d0d0d0 100%);
       border-radius: 12px 12px 30px 12px;
-      padding: 1.5rem 1.5rem 2.5rem;
+      padding: 1.2rem 1.5rem 2rem;
       box-shadow: 
         0 10px 30px rgba(0,0,0,0.15),
         inset 0 1px 0 rgba(255,255,255,0.5);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1rem;
-      width: 320px;
+      gap: 0.6rem;
+      width: 340px;
       max-width: 90vw;
       position: relative;
     }
@@ -119,7 +119,7 @@
     .gameboy-top {
       width: 100%;
       text-align: center;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.2rem;
     }
 
     /* Purple accent bar */
@@ -128,7 +128,7 @@
       height: 3px;
       background: linear-gradient(90deg, #8b5a9f 0%, #c084d4 50%, #8b5a9f 100%);
       border-radius: 2px;
-      margin: 0.3rem auto 0.8rem;
+      margin: 0.2rem auto 0.3rem;
     }
 
     .brand-text {
@@ -144,7 +144,7 @@
       width: 100%;
       background: #8b8b8b;
       border-radius: 8px;
-      padding: 1rem;
+      padding: 0.6rem;
       box-shadow: 
         inset 0 2px 6px rgba(0,0,0,0.3),
         0 2px 4px rgba(0,0,0,0.1);
@@ -210,7 +210,7 @@
       align-items: center;
       justify-content: center;
       gap: 0.3rem;
-      margin: 0.5rem 0 0.3rem;
+      margin: 0.3rem 0 0.2rem;
       font-size: 0.7rem;
       color: #4a4a4a;
     }
@@ -233,7 +233,7 @@
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      padding: 1rem 0.5rem 0.5rem;
+      padding: 0.5rem 0.5rem 0.2rem;
     }
 
     /* D-pad */
@@ -344,7 +344,7 @@
     .small-buttons {
       display: flex;
       gap: 1rem;
-      margin: 0.5rem 0;
+      margin: 0.3rem 0;
       align-items: center;
     }
 
@@ -365,20 +365,21 @@
     .small-button::after {
       content: attr(data-label);
       position: absolute;
-      top: -12px;
+      top: -14px;
       left: 50%;
       transform: translateX(-50%);
       font-size: 0.55rem;
       color: #666;
+      white-space: nowrap;
     }
 
     /* START button/link */
     .actions {
-      margin-top: 0.5rem;
+      margin-top: 0.3rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.8rem;
+      gap: 0.5rem;
       width: 100%;
     }
 
@@ -416,7 +417,7 @@
       display: grid;
       grid-template-columns: repeat(6, 1fr);
       gap: 3px;
-      margin-top: 0.5rem;
+      margin-top: 0.3rem;
     }
 
     .speaker-hole {
