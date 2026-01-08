@@ -8,11 +8,9 @@
   <meta property="og:title" content="Page not found" />
 
   <!-- CSP and EDS scripts -->
-  <meta
-    http-equiv="Content-Security-Policy"
+  <meta http-equiv="Content-Security-Policy"
     content="script-src 'nonce-aem' 'strict-dynamic' 'unsafe-inline' http: https:; base-uri 'self'; object-src 'none';"
-    move-to-http-header="true"
-  >
+    move-to-http-header="true">
   <script nonce="aem" type="importmap">
     {
       "imports": {
@@ -23,47 +21,35 @@
       }
     }
   </script>
-  <script nonce="aem" type="text/javascript">
-    window.isErrorPage = true;
-    window.errorCode = '404';
-  </script>
+  <script nonce="aem">window.isErrorPage = true; window.errorCode = '404';</script>
 
   <!-- Dynamic metadata -->
   <script nonce="aem" type="module">
     await fetch('/metadata.json')
-      .then((res) => res.json())
+      .then(res => res.json())
       .then(({ data = [] }) => {
         const currentUrl = window.location.pathname;
-        const match = data.find((entry) => {
+        const match = data.find(entry => {
           const { URL, root, placeholders } = entry;
           const pattern = URL.replace("**", "(.*)");
           const regex = new RegExp(`^${pattern}$`);
-          if (regex.test(currentUrl)) {
-            return { root, placeholders };
-          }
+          return regex.test(currentUrl);
         });
-
         if (!match) return;
-
         const { root, placeholders } = match;
-
         if (root) {
           const rootMeta = document.createElement('meta');
           rootMeta.name = 'root';
           rootMeta.content = root;
           document.head.appendChild(rootMeta);
         }
-
         if (placeholders) {
           const placeholdersMeta = document.createElement('meta');
           placeholdersMeta.name = 'placeholders';
           placeholdersMeta.content = placeholders;
           document.head.appendChild(placeholdersMeta);
         }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+      }).catch(console.error);
   </script>
 
   <!-- Global scripts -->
@@ -79,17 +65,14 @@
           backBtn.classList.add('button', 'error-button-back');
           backBtn.href = pathname;
           backBtn.textContent = 'Go back';
-          backBtn.title = 'Go back';
           const btnContainer = document.querySelector('.button-container');
-          if (btnContainer) {
-            btnContainer.append(backBtn);
-          }
+          btnContainer?.append(backBtn);
         }
       }
     });
   </script>
 
-  <!-- RUM tracking -->
+  <!-- RUM -->
   <script nonce="aem" type="module">
     import { sampleRUM } from '/scripts/aem.js';
     sampleRUM('404', { source: document.referrer });
@@ -99,241 +82,67 @@
   <link rel="stylesheet" href="/styles/styles.css">
   <link rel="stylesheet" href="/styles/lazy-styles.css">
 
-  <!-- Game Boy styles -->
+  <!-- Scoped Game Boy styles -->
   <style>
-    :root {
-      --bg: #e6e6e6;
-      --bezel: #8b8b8b;
-      --screen: #9ca370;
-      --text: #1f1f1f;
-      --text-shadow: #627142;
-      --button: #a93671;
-      --button-text: #e6e6e6;
-      --focus: #2a6df4;
-    }
-
-    * { box-sizing: border-box; }
-    html, body {
-      height: 100%;
-      margin: 0;
-      background-color: var(--bg);
-    }
-    body {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
-      color: var(--text);
-    }
-
+    body { margin: 0; background: #e6e6e6; }
     main.gameboy {
-      align-items: center;
       display: flex;
-      flex-direction: column;
-      margin: 0 auto;
-      max-width: 1264px;
-      min-height: calc(100vh - var(--nav-height, 0px));
-      padding: 32px;
-      width: 100%;
-      gap: 24px;
-    }
-
-    .gameboy-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
-      width: 100%;
-      max-width: 560px;
-      gap: 1.5rem;
-    }
-
-    .gameboy-screen {
-      background-color: var(--screen);
-      border: 20px solid var(--bezel);
-      border-radius: 10px;
+      align-items: flex-start; /* Align from top */
+      flex-direction: column;
+      min-height: calc(100vh - var(--nav-height, 64px));
       padding: 2rem;
-      width: 100%;
-      max-width: 400px;
-      aspect-ratio: 10 / 9;
-      position: relative;
-      box-shadow:
-        inset 2px 2px 15px rgba(0,0,0,0.3),
-        5px 5px 15px rgba(0,0,0,0.2);
+      margin-top: 4rem; /* Extra space below sticky header */
     }
-    .screen-content {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      gap: 1.25rem;
+    .gameboy-container { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; width: 100%; }
+    .gameboy-screen {
+      background: #9ca370; border: 20px solid #8b8b8b; border-radius: 10px;
+      padding: 2rem; max-width: 400px; width: 100%; aspect-ratio: 10/9;
+      box-shadow: inset 2px 2px 15px rgba(0,0,0,0.3), 5px 5px 15px rgba(0,0,0,0.2);
     }
-    .pixel-text {
-      font-size: 1.2rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-    }
-    .error-text {
-      font-size: 2rem;
-      font-weight: 800;
-      text-shadow: 2px 2px var(--text-shadow);
-      margin: 0;
-    }
-    .game-text {
-      font-size: 1.5rem;
-      line-height: 1.5;
-      margin: 0;
-    }
-    .instructions {
-      font-size: 1rem;
-      line-height: 1.5;
-      animation: blink 1s infinite;
-      margin: 0;
-    }
-
-    .controls-container {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      max-width: 400px;
-      gap: 1.25rem;
-    }
-    .d-pad-container {
-      position: relative;
-      width: 120px;
-      height: 120px;
-    }
-    .d-pad {
-      position: relative;
-      width: 100%;
-      height: 100%;
-    }
-    .d-pad button,
-    .d-pad .d-pad-center {
-      position: absolute;
-      background-color: #333;
-      border: none;
-      cursor: default;
-    }
-    .d-pad button { border-radius: 6px; }
-    .d-pad-center {
-      width: 40px;
-      height: 40px;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      border-radius: 8px;
-    }
-    .d-pad-up    { width: 40px; height: 40px; top: 0; left: 50%; transform: translateX(-50%); border-radius: 6px 6px 0 0; }
-    .d-pad-right { width: 40px; height: 40px; right: 0; top: 50%; transform: translateY(-50%); border-radius: 0 6px 6px 0; }
-    .d-pad-down  { width: 40px; height: 40px; bottom: 0; left: 50%; transform: translateX(-50%); border-radius: 0 0 6px 6px; }
-    .d-pad-left  { width: 40px; height: 40px; left: 0; top: 50%; transform: translateY(-50%); border-radius: 6px 0 0 6px; }
-
-    .action-buttons {
-      display: flex;
-      align-items: center;
-    }
-    .ab-buttons {
-      display: flex;
-      gap: 1rem;
-      transform: rotate(-25deg);
-    }
-    .button {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background-color: var(--button);
-      border: none;
-      color: var(--button-text);
-      font-size: 1.25rem;
-      font-weight: 700;
-      cursor: default;
-      box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-      transition: transform 0.1s;
-    }
-
-    .actions {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-    }
-    .start-button {
-      display: inline-block;
-      padding: 0.6rem 2rem;
-      background-color: var(--bezel);
-      color: var(--button-text);
-      text-decoration: none;
-      border-radius: 6px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      transition: transform 0.1s, box-shadow 0.1s;
-      box-shadow: 2px 2px 5px rgba(0,0,0,0.25);
-      outline: none;
-    }
-    .start-button:hover {
-      transform: translateY(-1px);
-    }
-    .start-button:focus-visible {
-      box-shadow: 0 0 0 3px white, 0 0 0 6px var(--focus);
-    }
-
-    .button-container {
-      display: inline-flex;
-      gap: 12px;
-      align-items: center;
-      justify-content: center;
-      margin-top: 8px;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
+    .screen-content { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 1rem; text-align: center; }
+    .pixel-text { font-size: 1.2rem; font-weight: bold; }
+    .error-text { font-size: 2rem; font-weight: bold; text-shadow: 2px 2px #627142; }
+    .game-text { font-size: 1.5rem; }
+    .instructions { font-size: 1rem; animation: blink 1s infinite; }
+    .controls-container { display: flex; justify-content: space-between; max-width: 400px; width: 100%; }
+    .d-pad-container { width: 120px; height: 120px; position: relative; }
+    .d-pad button, .d-pad-center { background: #333; border: none; position: absolute; }
+    .d-pad-center { width: 40px; height: 40px; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+    .gameboy-container .button { width: 50px; height: 50px; border-radius: 50%; background: #a93671; color: #e6e6e6; font-weight: bold; }
+    .start-button { padding: 0.6rem 2rem; background: #8b8b8b; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold; }
+    .actions { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    @keyframes blink { 0%,100%{opacity:1;}50%{opacity:0;} }
   </style>
-
-  <!-- Optional: keyboard shortcut -->
-  <script nonce="aem" type="module">
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        const start = document.querySelector('.start-button');
-        start?.click();
-      }
-    });
-  </script>
 </head>
 
 <body>
   <header></header>
-
-  <main class="gameboy" role="main" aria-label="404 - Page Not Found">
+  <main class="gameboy">
     <div class="gameboy-container">
-      <section class="gameboy-screen" aria-label="Retro screen">
+      <section class="gameboy-screen">
         <div class="screen-content">
-          <div class="pixel-text" aria-hidden="true">KHALIL MANNS</div>
+          <div class="pixel-text">KHALIL MANNS</div>
           <h1 class="error-text">ERROR 404</h1>
-          <p class="game-text">GAME OVER<br />PAGE NOT FOUND</p>
-          <p class="instructions">PRESS START<br />TO RETURN HOME</p>
+          <p class="game-text">GAME OVER<br>PAGE NOT FOUND</p>
+          <p class="instructions">PRESS START<br>TO RETURN HOME</p>
         </div>
       </section>
 
-      <div class="controls-container" aria-hidden="true">
+      <div class="controls-container">
         <div class="d-pad-container">
           <div class="d-pad">
             <div class="d-pad-center"></div>
-            <button class="d-pad-up" type="button"></button>
-            <button class="d-pad-right" type="button"></button>
-            <button class="d-pad-down" type="button"></button>
-            <button class="d-pad-left" type="button"></button>
+            <button style="top:0;left:50%;transform:translateX(-50%);width:40px;height:40px;"></button>
+            <button style="right:0;top:50%;transform:translateY(-50%);width:40px;height:40px;"></button>
+            <button style="bottom:0;left:50%;transform:translateX(-50%);width:40px;height:40px;"></button>
+            <button style="left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;"></button>
           </div>
         </div>
-
         <div class="action-buttons">
-          <div class="ab-buttons">
-            <button class="button b-button" type="button">B</button>
-            <button class="button a-button" type="button">A</button>
+          <div class="ab-buttons" style="display:flex;gap:1rem;transform:rotate(-25deg);">
+            <button class="button">B</button>
+            <button class="button">A</button>
           </div>
         </div>
       </div>
@@ -341,12 +150,11 @@
       <div class="actions">
         <a href="/" class="start-button">START</a>
         <p class="button-container">
-          <a href="/" class="button secondary error-button-home">Go home</a>
+          <a href="/" class="start-button">Go home</a>
         </p>
       </div>
     </div>
   </main>
-
   <footer></footer>
 </body>
 </html>
