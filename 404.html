@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta property="og:title" content="Page not found" />
 
-  <!-- Keep EDS CSP and scripts exactly as in original -->
+  <!-- CSP and EDS scripts -->
   <meta
     http-equiv="Content-Security-Policy"
     content="script-src 'nonce-aem' 'strict-dynamic' 'unsafe-inline' http: https:; base-uri 'self'; object-src 'none';"
@@ -28,7 +28,7 @@
     window.errorCode = '404';
   </script>
 
-  <!-- Dynamic root/placeholders from metadata.json (unchanged) -->
+  <!-- Dynamic metadata -->
   <script nonce="aem" type="module">
     await fetch('/metadata.json')
       .then((res) => res.json())
@@ -66,10 +66,10 @@
       });
   </script>
 
-  <!-- Global storefront scripts (unchanged) -->
+  <!-- Global scripts -->
   <script nonce="aem" src="/scripts/scripts.js" type="module"></script>
 
-  <!-- Back button logic (unchanged) -->
+  <!-- Back button logic -->
   <script nonce="aem" type="module">
     window.addEventListener('load', () => {
       if (document.referrer) {
@@ -89,17 +89,17 @@
     });
   </script>
 
-  <!-- RUM (unchanged) -->
+  <!-- RUM tracking -->
   <script nonce="aem" type="module">
     import { sampleRUM } from '/scripts/aem.js';
     sampleRUM('404', { source: document.referrer });
   </script>
 
-  <!-- Existing site styles (unchanged) -->
+  <!-- Styles -->
   <link rel="stylesheet" href="/styles/styles.css">
   <link rel="stylesheet" href="/styles/lazy-styles.css">
 
-  <!-- Inline styles for the Game Boy–style design -->
+  <!-- Game Boy styles -->
   <style>
     :root {
       --bg: #e6e6e6;
@@ -122,15 +122,231 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
       color: var(--text);
     }
 
-      main.gameboy {
-        align-items: center;
-        display: flex;
-        flex-direction: column;
-        margin: 0 auto;
-        max-width: 1264px;
+    main.gameboy {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      margin: 0 auto;
+      max-width: 1264px;
+      min-height: calc(100vh - var(--nav-height, 0px));
+      padding: 32px;
+      width: 100%;
+      gap: 24px;
+    }
+
+    .gameboy-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 560px;
+      gap: 1.5rem;
+    }
+
+    .gameboy-screen {
+      background-color: var(--screen);
+      border: 20px solid var(--bezel);
+      border-radius: 10px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 400px;
+      aspect-ratio: 10 / 9;
+      position: relative;
+      box-shadow:
+        inset 2px 2px 15px rgba(0,0,0,0.3),
+        5px 5px 15px rgba(0,0,0,0.2);
+    }
+    .screen-content {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: 1.25rem;
+    }
+    .pixel-text {
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+    .error-text {
+      font-size: 2rem;
+      font-weight: 800;
+      text-shadow: 2px 2px var(--text-shadow);
+      margin: 0;
+    }
+    .game-text {
+      font-size: 1.5rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+    .instructions {
+      font-size: 1rem;
+      line-height: 1.5;
+      animation: blink 1s infinite;
+      margin: 0;
+    }
+
+    .controls-container {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 400px;
+      gap: 1.25rem;
+    }
+    .d-pad-container {
+      position: relative;
+      width: 120px;
+      height: 120px;
+    }
+    .d-pad {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    .d-pad button,
+    .d-pad .d-pad-center {
+      position: absolute;
+      background-color: #333;
+      border: none;
+      cursor: default;
+    }
+    .d-pad button { border-radius: 6px; }
+    .d-pad-center {
+      width: 40px;
+      height: 40px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 8px;
+    }
+    .d-pad-up    { width: 40px; height: 40px; top: 0; left: 50%; transform: translateX(-50%); border-radius: 6px 6px 0 0; }
+    .d-pad-right { width: 40px; height: 40px; right: 0; top: 50%; transform: translateY(-50%); border-radius: 0 6px 6px 0; }
+    .d-pad-down  { width: 40px; height: 40px; bottom: 0; left: 50%; transform: translateX(-50%); border-radius: 0 0 6px 6px; }
+    .d-pad-left  { width: 40px; height: 40px; left: 0; top: 50%; transform: translateY(-50%); border-radius: 6px 0 0 6px; }
+
+    .action-buttons {
+      display: flex;
+      align-items: center;
+    }
+    .ab-buttons {
+      display: flex;
+      gap: 1rem;
+      transform: rotate(-25deg);
+    }
+    .button {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: var(--button);
+      border: none;
+      color: var(--button-text);
+      font-size: 1.25rem;
+      font-weight: 700;
+      cursor: default;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+      transition: transform 0.1s;
+    }
+
+    .actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .start-button {
+      display: inline-block;
+      padding: 0.6rem 2rem;
+      background-color: var(--bezel);
+      color: var(--button-text);
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      transition: transform 0.1s, box-shadow 0.1s;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.25);
+      outline: none;
+    }
+    .start-button:hover {
+      transform: translateY(-1px);
+    }
+    .start-button:focus-visible {
+      box-shadow: 0 0 0 3px white, 0 0 0 6px var(--focus);
+    }
+
+    .button-container {
+      display: inline-flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+  </style>
+
+  <!-- Optional: keyboard shortcut -->
+  <script nonce="aem" type="module">
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        const start = document.querySelector('.start-button');
+        start?.click();
       }
-    </style>
+    });
+  </script>
+</head>
+
+<body>
+  <header></header>
+
+  <main class="gameboy" role="main" aria-label="404 - Page Not Found">
+    <div class="gameboy-container">
+      <section class="gameboy-screen" aria-label="Retro screen">
+        <div class="screen-content">
+          <div class="pixel-text" aria-hidden="true">KHALIL MANNS</div>
+          <h1 class="error-text">ERROR 404</h1>
+          <p class="game-text">GAME OVER<br />PAGE NOT FOUND</p>
+          <p class="instructions">PRESS START<br />TO RETURN HOME</p>
+        </div>
+      </section>
+
+      <div class="controls-container" aria-hidden="true">
+        <div class="d-pad-container">
+          <div class="d-pad">
+            <div class="d-pad-center"></div>
+            <button class="d-pad-up" type="button"></button>
+            <button class="d-pad-right" type="button"></button>
+            <button class="d-pad-down" type="button"></button>
+            <button class="d-pad-left" type="button"></button>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <div class="ab-buttons">
+            <button class="button b-button" type="button">B</button>
+            <button class="button a-button" type="button">A</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a href="/" class="start-button">START</a>
+        <p class="button-container">
+          <a href="/" class="button secondary error-button-home">Go home</a>
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <footer></footer>
+</body>
+</html>
