@@ -102,15 +102,15 @@
     .gameboy-casing {
       background: linear-gradient(135deg, #e8e8e8 0%, #d0d0d0 100%);
       border-radius: 12px 12px 30px 12px;
-      padding: 1.2rem 1.5rem 2rem;
+      padding: 1rem 1.2rem 1.5rem;
       box-shadow: 
         0 10px 30px rgba(0,0,0,0.15),
         inset 0 1px 0 rgba(255,255,255,0.5);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.6rem;
-      width: 340px;
+      gap: 0.4rem;
+      width: 380px;
       max-width: 90vw;
       position: relative;
     }
@@ -119,7 +119,7 @@
     .gameboy-top {
       width: 100%;
       text-align: center;
-      margin-bottom: 0.2rem;
+      margin-bottom: 0;
     }
 
     /* Purple accent bar */
@@ -128,7 +128,7 @@
       height: 3px;
       background: linear-gradient(90deg, #8b5a9f 0%, #c084d4 50%, #8b5a9f 100%);
       border-radius: 2px;
-      margin: 0.2rem auto 0.3rem;
+      margin: 0.2rem auto 0.2rem;
     }
 
     .brand-text {
@@ -144,7 +144,7 @@
       width: 100%;
       background: #8b8b8b;
       border-radius: 8px;
-      padding: 0.5rem;
+      padding: 0.4rem;
       box-shadow: 
         inset 0 2px 6px rgba(0,0,0,0.3),
         0 2px 4px rgba(0,0,0,0.1);
@@ -155,7 +155,7 @@
       border: none;
       border-radius: 4px;
       width: 100%;
-      aspect-ratio: 10 / 9;
+      height: 260px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -210,7 +210,7 @@
       align-items: center;
       justify-content: center;
       gap: 0.3rem;
-      margin: 0.3rem 0 0.2rem;
+      margin: 0.2rem 0 0.1rem;
       font-size: 0.7rem;
       color: #4a4a4a;
     }
@@ -233,7 +233,7 @@
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      padding: 0.5rem 0 0.2rem;
+      padding: 0.3rem 0 0.1rem;
     }
 
     /* D-pad */
@@ -241,7 +241,7 @@
       width: 85px;
       height: 85px;
       position: relative;
-      margin-left: 1rem;
+      margin-left: 1.5rem;
     }
 
     .d-pad {
@@ -303,7 +303,7 @@
       display: flex;
       align-items: center;
       gap: 0.8rem;
-      margin-right: 1rem;
+      margin-right: 1.5rem;
     }
 
     .ab-buttons {
@@ -346,7 +346,7 @@
     .small-buttons {
       display: flex;
       gap: 1rem;
-      margin: 0.3rem 0;
+      margin: 0.2rem 0;
       align-items: center;
     }
 
@@ -377,11 +377,11 @@
 
     /* START button/link */
     .actions {
-      margin-top: 0.3rem;
+      margin-top: 0.2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
       width: 100%;
     }
 
@@ -419,7 +419,7 @@
       display: grid;
       grid-template-columns: repeat(6, 1fr);
       gap: 3px;
-      margin-top: 0.3rem;
+      margin-top: 0.2rem;
     }
 
     .speaker-hole {
@@ -436,7 +436,11 @@
 
     @media (max-width: 480px) {
       .gameboy-casing {
-        width: 280px;
+        width: 320px;
+      }
+      
+      .gameboy-screen {
+        height: 220px;
       }
       
       .error-text {
@@ -445,6 +449,14 @@
       
       .game-text {
         font-size: 0.9rem;
+      }
+      
+      .d-pad-container {
+        margin-left: 0.5rem;
+      }
+      
+      .action-buttons {
+        margin-right: 0.5rem;
       }
     }
   </style>
