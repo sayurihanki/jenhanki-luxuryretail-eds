@@ -82,36 +82,111 @@
   <link rel="stylesheet" href="/styles/styles.css">
   <link rel="stylesheet" href="/styles/lazy-styles.css">
 
-  <!-- Scoped Game Boy styles -->
+  <!-- Redesigned Game Boy styles -->
   <style>
     body { margin: 0; background: #e6e6e6; }
     main.gameboy {
       display: flex;
       justify-content: center;
-      align-items: flex-start; /* Align from top */
+      align-items: flex-start;
       flex-direction: column;
       min-height: calc(100vh - var(--nav-height, 64px));
       padding: 2rem;
-      margin-top: 4rem; /* Extra space below sticky header */
+      margin-top: 4rem; /* Clears sticky header */
     }
-    .gameboy-container { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; width: 100%; }
+    .gameboy-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem; /* Space between screen and controls */
+    }
+    /* Screen */
     .gameboy-screen {
-      background: #9ca370; border: 20px solid #8b8b8b; border-radius: 10px;
-      padding: 2rem; max-width: 400px; width: 100%; aspect-ratio: 10/9;
+      background: #9ca370;
+      border: 20px solid #8b8b8b;
+      border-radius: 10px;
+      padding: 1rem;
+      max-width: 300px;
+      width: 100%;
+      aspect-ratio: 1 / 1; /* Square like original */
       box-shadow: inset 2px 2px 15px rgba(0,0,0,0.3), 5px 5px 15px rgba(0,0,0,0.2);
     }
-    .screen-content { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 1rem; text-align: center; }
-    .pixel-text { font-size: 1.2rem; font-weight: bold; }
-    .error-text { font-size: 2rem; font-weight: bold; text-shadow: 2px 2px #627142; }
-    .game-text { font-size: 1.5rem; }
-    .instructions { font-size: 1rem; animation: blink 1s infinite; }
-    .controls-container { display: flex; justify-content: space-between; max-width: 400px; width: 100%; }
-    .d-pad-container { width: 120px; height: 120px; position: relative; }
-    .d-pad button, .d-pad-center { background: #333; border: none; position: absolute; }
-    .d-pad-center { width: 40px; height: 40px; left: 50%; top: 50%; transform: translate(-50%, -50%); }
-    .gameboy-container .button { width: 50px; height: 50px; border-radius: 50%; background: #a93671; color: #e6e6e6; font-weight: bold; }
-    .start-button { padding: 0.6rem 2rem; background: #8b8b8b; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold; }
-    .actions { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .screen-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      text-align: center;
+    }
+    .pixel-text { font-size: 1rem; font-weight: bold; }
+    .error-text { font-size: 1.8rem; font-weight: bold; text-shadow: 2px 2px #627142; }
+    .game-text { font-size: 1.2rem; }
+    .instructions { font-size: 0.9rem; animation: blink 1s infinite; }
+
+    /* Controls */
+    .controls-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 4rem; /* Big gap between D-pad and A/B buttons */
+      width: 100%;
+      max-width: 400px;
+    }
+    .d-pad-container {
+      width: 120px;
+      height: 120px;
+      position: relative;
+    }
+    .d-pad button, .d-pad-center {
+      background: #333;
+      border: none;
+      position: absolute;
+    }
+    .d-pad-center {
+      width: 40px;
+      height: 40px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .d-pad button { width: 40px; height: 40px; }
+    .d-pad-up { top: 0; left: 50%; transform: translateX(-50%); }
+    .d-pad-right { right: 0; top: 50%; transform: translateY(-50%); }
+    .d-pad-down { bottom: 0; left: 50%; transform: translateX(-50%); }
+    .d-pad-left { left: 0; top: 50%; transform: translateY(-50%); }
+
+    .ab-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      transform: rotate(-15deg);
+    }
+    .gameboy-container .button {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #a93671;
+      color: #e6e6e6;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    /* START button */
+    .actions {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: center;
+    }
+    .start-button {
+      padding: 0.6rem 2rem;
+      background: #8b8b8b;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
     @keyframes blink { 0%,100%{opacity:1;}50%{opacity:0;} }
   </style>
 </head>
@@ -120,6 +195,7 @@
   <header></header>
   <main class="gameboy">
     <div class="gameboy-container">
+      <!-- Screen -->
       <section class="gameboy-screen">
         <div class="screen-content">
           <div class="pixel-text">KHALIL MANNS</div>
@@ -129,28 +205,32 @@
         </div>
       </section>
 
+      <!-- Controls -->
       <div class="controls-container">
+        <!-- D-pad -->
         <div class="d-pad-container">
           <div class="d-pad">
             <div class="d-pad-center"></div>
-            <button style="top:0;left:50%;transform:translateX(-50%);width:40px;height:40px;"></button>
-            <button style="right:0;top:50%;transform:translateY(-50%);width:40px;height:40px;"></button>
-            <button style="bottom:0;left:50%;transform:translateX(-50%);width:40px;height:40px;"></button>
-            <button style="left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;"></button>
+            <button class="d-pad-up"></button>
+            <button class="d-pad-right"></button>
+            <button class="d-pad-down"></button>
+            <button class="d-pad-left"></button>
           </div>
         </div>
+        <!-- A/B buttons -->
         <div class="action-buttons">
-          <div class="ab-buttons" style="display:flex;gap:1rem;transform:rotate(-25deg);">
+          <div class="ab-buttons">
             <button class="button">B</button>
             <button class="button">A</button>
           </div>
         </div>
       </div>
 
+      <!-- START button -->
       <div class="actions">
         <a href="/" class="start-button">START</a>
         <p class="button-container">
-          <a href="/" class="start-button">Go home</a>
+          <a href="/" class="button secondary error-button-home">Go home</a>
         </p>
       </div>
     </div>
