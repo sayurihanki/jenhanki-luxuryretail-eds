@@ -536,6 +536,7 @@ header .nav-search-input .search_autocomplete .popover-container {
   font: var(--type-body-1-default-font) !important;
   letter-spacing: var(--type-body-1-default-letter-spacing) !important;
   width: 100%;
+  padding: 8px 0;
 }
 
 @media (min-width: 1024px) {
@@ -563,6 +564,8 @@ header .nav-search-input .search_autocomplete .popover-container {
   display: inline-block;
   width: 100%;
   text-decoration: none;
+  color: var(--color-neutral-800);
+  transition: background-color 0.2s ease;
 }
 
 .dropdown-wrapper.nav-tools-wrapper .nav-auth-menu-panel .authenticated-user-menu li > a:hover,
@@ -571,13 +574,14 @@ header .nav-search-input .search_autocomplete .popover-container {
 .authenticated-user-menu
 li
 > .logoutButton:hover {
-  background-color: lightgray;
+  background-color: var(--color-neutral-200);
+  color: var(--color-brand-700);
 }
 
 .dropdown-wrapper.nav-tools-wrapper .nav-auth-menu-panel .authenticated-user-menu li button {
   cursor: pointer;
   background-color: transparent !important;
-  color: currentcolor !important;
+  color: var(--color-neutral-800) !important;
   padding: 12px 15px !important;
   display: inline-block !important;
   width: 100% !important;
@@ -589,10 +593,12 @@ li
   box-sizing: border-box !important;
   border: none !important;
   border-radius: 0 !important;
+  transition: background-color 0.2s ease, color 0.2s ease !important;
 }
 
 .dropdown-wrapper.nav-tools-wrapper .nav-auth-menu-panel .authenticated-user-menu li button:hover {
-  background-color: lightgray !important;
+  background-color: var(--color-neutral-200) !important;
+  color: var(--color-brand-700) !important;
   border-radius: 0 !important;
 }
 
