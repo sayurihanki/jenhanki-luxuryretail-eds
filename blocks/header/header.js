@@ -186,6 +186,9 @@ export default async function decorate(block) {
     navSections
       .querySelectorAll(':scope .default-content-wrapper > ul > li')
       .forEach((navSection) => {
+        if (navSection.querySelector('a')?.href === window.location.href) {
+          navSection.classList.add('active');
+        }
         if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
         setupSubmenu(navSection);
         navSection.addEventListener('click', (event) => {
