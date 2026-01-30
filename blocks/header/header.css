@@ -281,9 +281,9 @@ header nav .nav-sections ul > li:empty {
   }
 
   header nav .nav-sections .nav-drop[aria-expanded='true'] ul {
-    flex-flow: column wrap;
-    max-height: calc(var(--desktop-panel-max-height) - 2 * var(--spacing-xbig));
-    min-height: calc(var(--desktop-panel-min-height) - 2 * var(--spacing-xbig));
+    display: block;
+    max-height: none;
+    min-height: 0;
   }
 
   header nav .nav-sections .default-content-wrapper > ul > li {
@@ -294,12 +294,16 @@ header nav .nav-sections ul > li:empty {
     background-color: var(--color-neutral-50);
     box-sizing: border-box;
     left: 0;
-    max-height: var(--desktop-panel-max-height);
-    min-height: var(--desktop-panel-min-height);
-    padding: var(--spacing-xbig);
+    padding: var(--spacing-small);
     position: absolute;
-    top: var(--spacing-large);
-    width: 100%;
+    top: calc(100% + 8px);
+    width: max-content;
+    min-width: 220px;
+    max-width: 320px;
+    border: 1px solid var(--color-neutral-200);
+    border-radius: var(--shape-border-radius-2);
+    box-shadow: var(--shape-shadow-2);
+    z-index: 5;
   }
 
   header nav .nav-sections .default-content-wrapper > ul > li .submenu-header {
@@ -313,22 +317,14 @@ header nav .nav-sections ul > li:empty {
   }
 
   header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] ul {
-    display: flex;
-    margin: 0 auto;
-    overflow-x: auto;
-    width: var(--desktop-large-panel-width);
+    display: block;
+    margin: 0;
+    overflow: visible;
+    width: auto;
   }
 
   header nav .nav-sections .default-content-wrapper > ul > li ul::before {
-    content: '';
-    position: absolute;
-    top: -8px;
-    left: 16px;
-    width: 0;
-    height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-bottom: 8px solid var(--color-neutral-500);
+    content: none;
   }
 
   header nav .nav-sections .default-content-wrapper > ul > li ul > li {
