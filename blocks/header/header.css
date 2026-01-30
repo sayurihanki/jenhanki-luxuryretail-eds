@@ -143,15 +143,18 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
 
 /* brand */
 header nav .nav-brand {
-  min-width: 128px;
+  min-width: 80px;
+  max-width: 120px;
 }
 
 header nav .nav-brand a {
   grid-area: brand;
-  flex-basis: 128px;
+  flex-basis: 80px;
   font: var(--type-headline-1-font);
   letter-spacing: var(--type-headline-1-letter-spacing);
   font-weight: bold;
+  display: flex;
+  align-items: center;
 }
 
 li.nav-drop img {
@@ -162,8 +165,11 @@ li.nav-drop img {
 }
 
 header nav .nav-brand img {
-  width: 128px;
+  width: 100%;
+  max-width: 100px;
   height: auto;
+  max-height: calc(var(--nav-height) - 20px);
+  object-fit: contain;
 }
 
 /* sections */
@@ -328,6 +334,21 @@ header nav .nav-sections ul > li:empty {
   header nav .nav-sections .default-content-wrapper > ul > li ul > li {
     min-width: var(--desktop-item-panel-min-width);
     max-width: var(--desktop-item-panel-max-width);
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li ul > li a {
+    color: var(--color-neutral-800);
+    text-decoration: none;
+    display: block;
+    padding: 8px 12px;
+    transition: color 0.2s ease, background-color 0.2s ease;
+    font: var(--type-body-1-default-font);
+    letter-spacing: var(--type-body-1-default-letter-spacing);
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li ul > li a:hover {
+    color: var(--color-brand-700);
+    background-color: var(--color-neutral-100);
   }
 }
 
