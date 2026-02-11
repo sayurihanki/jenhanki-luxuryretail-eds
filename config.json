@@ -1,38 +1,38 @@
 {
   "public": {
     "default": {
-      "commerce-core-endpoint": "https://na1-sandbox.api.commerce.adobe.com/CWC1Z3dRYVnZ5UEFozgrDk/graphql",
-      "commerce-endpoint": "https://na1-sandbox.api.commerce.adobe.com/CWC1Z3dRYVnZ5UEFozgrDk/graphql",
+      "commerce-endpoint": "https://na1.api.commerce.adobe.com/R2BTcyPc7knfUJMozF1oQQ/graphql",
       "headers": {
         "all": {
-          "Store": "luxretaileng"
+          "Store": "default"
         },
         "cs": {
-          "Magento-Store-Code": "luxretail",
-          "Magento-Store-View-Code": "luxretaileng",
-          "Magento-Website-Code": "base",
-          "Magento-Environment-Id": "CWC1Z3dRYVnZ5UEFozgrDk"
+          "Magento-Store-Code": "main_website_store",
+          "Magento-Store-View-Code": "default",
+          "Magento-Website-Code": "base"
         }
       },
+      "commerce-b2b-enabled": true,
+      "commerce-companies-enabled": true,
       "commerce-assets-enabled": false,
       "analytics": {
         "base-currency-code": "USD",
         "environment": "Testing",
-        "environment-id": "CWC1Z3dRYVnZ5UEFozgrDk",
-        "store-code": "luxretail",
-        "store-id": "luxretail",
-        "store-name": "Luxury Retail Store",
-        "store-url": "https://na1-sandbox.api.commerce.adobe.com/CWC1Z3dRYVnZ5UEFozgrDk/",
-        "store-view-code": "luxretaileng",
-        "store-view-id": "luxretaileng",
-        "store-view-name": "Luxury Retail English",
+        "environment-id": "R2BTcyPc7knfUJMozF1oQQ",
+        "store-code": "main_website_store",
+        "store-id": "main_website_store",
+        "store-name": "Default Store View",
+        "store-url": "https://coresaas-subgraph-external:8000/R2BTcyPc7knfUJMozF1oQQ/",
+        "store-view-code": "default",
+        "store-view-id": "default",
+        "store-view-name": "Default Store View",
         "website-code": "base",
         "website-id": "base",
         "website-name": "Main Website"
       },
       "plugins": {
         "picker": {
-          "rootCategory": "36"
+          "rootCategory": "2"
         }
       }
     }
