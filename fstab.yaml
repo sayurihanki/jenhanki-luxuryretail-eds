@@ -1,6 +1,6 @@
 mountpoints:
   /:
-    url: https://content.da.live/kmanns/luxuryretail-eds
+    url: https://content.da.live/sayurihanki/jenhanki-luxuryretail-eds
     type: markup
     ue: true
 
