@@ -1,6 +1,6 @@
 # Luxury Retail - Adobe Commerce Storefront
 
-A luxury retail storefront built on AEM Edge Delivery Services with Adobe Commerce integration. Cloned from [Adobe Commerce Boilerplate](https://github.com/adobe/aem-boilerplate-commerce) with Universal Editor support via [DA-block-collection](https://github.com/aemsites/da-block-collection). Kmanns site is here ([Luxury EDS](https://main--luxuryretail-eds--kmanns.aem.live))
+A luxury retail storefront built on AEM Edge Delivery Services with Adobe Commerce integration. Cloned from [Adobe Commerce Boilerplate](https://github.com/adobe/aem-boilerplate-commerce) with Universal Editor support via [DA-block-collection](https://github.com/aemsites/da-block-collection).
 
 **Features:** Commerce integration • Universal Editor • Responsive design • Design tokens • Accessibility
 
